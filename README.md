@@ -1,2 +1,2 @@
 # Hytale-BetterInteraction
-Minecraft-like block interaction for Hytale
+Brings familiar Minecraft-style interaction system to Hytale.
