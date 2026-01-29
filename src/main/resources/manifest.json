@@ -1,13 +1,11 @@
 {
   "Group": "dev.vinisebold",
   "Name": "BetterInteraction",
-  "Version": "${version}",
+  "Version": "1.0.0",
   "Description": "Brings familiar Minecraft-style interaction system to Hytale.",
   "Authors": [
     {
-      "Name": "vinisebold",
-      "Email": "vinicius.sebold05@gmail.com",
-      "Url": ""
+      "Name": "vinisebold"
     }
   ],
   "Website": "",
@@ -15,6 +13,6 @@
   "Dependencies": {},
   "OptionalDependencies": {},
   "DisabledByDefault": false,
-  "IncludesAssetPack": false,
+  "IncludesAssetPack": true,
   "Main": "dev.vinisebold.Main"
 }
