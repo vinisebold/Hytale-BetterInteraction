@@ -20,9 +20,6 @@ public class Main extends JavaPlugin {
     @Override
     protected void setup() {
         System.out.println("[BetterInteraction] Redirecionador de Interações ativo.");
-        this.getCommandRegistry().registerCommand(new ShowHudCommand("showhud", "Example command"));
-        this.getCommandRegistry().registerCommand(new HideHudCommand("hidehud", "Example command"));
-        this.getCommandRegistry().registerCommand(new UpdateHudCommand("updatehud", "Example command"));
         this.getCommandRegistry().registerCommand(new ShowPageCommand("showpage", "Example command"));
         this.getCommandRegistry().registerCommand(new HidePageCommand("hidepage", "Example command"));
         PacketAdapters.registerInbound(new InteractionPacketFilter());
