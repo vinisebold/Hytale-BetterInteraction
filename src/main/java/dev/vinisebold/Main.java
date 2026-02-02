@@ -6,10 +6,10 @@ import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import dev.vinisebold.commands.*;
-import dev.vinisebold.events.OpenGuiListener;
 import dev.vinisebold.network.InteractionPacketFilter;
 
 import javax.annotation.Nonnull;
+import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
 
@@ -20,14 +20,13 @@ public class Main extends JavaPlugin {
     @Override
     protected void setup() {
         System.out.println("[BetterInteraction] Redirecionador de Interações ativo.");
-        this.getCommandRegistry().registerCommand(new ShowPageCommand("showpage", "Example command"));
-        this.getCommandRegistry().registerCommand(new HidePageCommand("hidepage", "Example command"));
+        getCommandRegistry().registerCommand(new MyUICommand());
         PacketAdapters.registerInbound(new InteractionPacketFilter());
 
+        getLogger().at(Level.INFO).log("Commands registered: /testui, /dialog, /form, /info, /tutorial1, /tutorial2, /tutorial3");
         this.getEventRegistry().registerGlobal(
                 PlayerReadyEvent.class,
                 event -> event.getPlayer().sendMessage(Message.raw("[BetterInteraction] Redirecionador de Interações ativo."))
         );
-        this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, OpenGuiListener::openGui);
     }
 }

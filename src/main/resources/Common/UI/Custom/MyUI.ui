@@ -1,27 +1,125 @@
-$Common = "Common.ui";
-
-@MyTex = PatchStyle(TexturePath: "MyBackground.png");
+@CloseButtonStyle = TextButtonStyle(
+    Default: (Background: #2b3542, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #3b4552, LabelStyle: (FontSize: 13, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1b2532, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
 
 Group {
-  LayoutMode: Center;
+    Anchor: (Width: 500, Height: 320);
+    LayoutMode: Left;
 
-  Group #MyPanel {
-    Background: @MyTex;
-    Anchor: (Width: 800, Height: 1000);
-    LayoutMode: Top;
+    Group #LeftPanel {
+        Anchor: (Width: 150);
+        Background: #0a1119(0.95);
+        LayoutMode: Top;
+        Padding: (Full: 16);
 
-    Label #MyLabel {
-      Style: (FontSize: 32, Alignment: Center);
-      Anchor: (Top: 50);
-      Text: "MyText";
-      Padding: (Full: 10);
+        Label {
+            Text: "TUTORIAL 3";
+            Anchor: (Height: 25);
+            Style: (FontSize: 11, TextColor: #4a5568, RenderUppercase: true, LetterSpacing: 2);
+        }
+
+        Group { Anchor: (Height: 8); }
+
+        Label {
+            Text: "> 1. Settings";
+            Anchor: (Height: 30);
+            Style: (FontSize: 14, TextColor: #ffffff, RenderBold: true);
+        }
+
+        Label {
+            Text: "  2. Advanced";
+            Anchor: (Height: 30);
+            Style: (FontSize: 14, TextColor: #6e7da1);
+        }
+
+        Label {
+            Text: "  3. About";
+            Anchor: (Height: 30);
+            Style: (FontSize: 14, TextColor: #6e7da1);
+        }
     }
 
-    TextField #MyInput {
-      Style: $Common.@DefaultInputFieldStyle;
-      Background: $Common.@InputBoxBackground;
-      Anchor: (Top: 10, Width: 200, Height: 50);
-      Padding: (Full: 10);
+    Group #RightPanel {
+        FlexWeight: 1;
+        Background: #141c26(0.98);
+        LayoutMode: Top;
+        Padding: (Full: 20);
+
+        Group #SectionSettings {
+            LayoutMode: Top;
+
+            Label {
+                Text: "1. Settings";
+                Anchor: (Height: 36);
+                Style: (FontSize: 20, TextColor: #ffffff, RenderBold: true);
+            }
+
+            Label {
+                Text: "Configure preferred gameplay options and interaction preferences.";
+                Anchor: (Height: 32);
+                Style: (FontSize: 13, TextColor: #6e7da1);
+            }
+        }
+
+        Group {
+            Anchor: (Height: 1);
+            Background: #2b3542;
+        }
+
+        Group { Anchor: (Height: 12); }
+
+        Group #SectionAdvanced {
+            LayoutMode: Top;
+
+            Label {
+                Text: "2. Advanced";
+                Anchor: (Height: 36);
+                Style: (FontSize: 20, TextColor: #ffffff, RenderBold: true);
+            }
+
+            Label {
+                Text: "Fine-tune developer controls, debugging overlays, and experimental features.";
+                Anchor: (Height: 32);
+                Style: (FontSize: 13, TextColor: #6e7da1);
+            }
+        }
+
+        Group {
+            Anchor: (Height: 1);
+            Background: #2b3542;
+        }
+
+        Group { Anchor: (Height: 12); }
+
+        Group #SectionAbout {
+            LayoutMode: Top;
+
+            Label {
+                Text: "3. About";
+                Anchor: (Height: 36);
+                Style: (FontSize: 20, TextColor: #ffffff, RenderBold: true);
+            }
+
+            Label {
+                Text: "Learn more about this interaction module, version history, and contributors.";
+                Anchor: (Height: 32);
+                Style: (FontSize: 13, TextColor: #6e7da1);
+            }
+        }
+
+        Group { FlexWeight: 1; }
+
+        Group {
+            LayoutMode: Right;
+            Anchor: (Height: 40);
+
+            TextButton #CloseButton {
+                Text: "CLOSE";
+                Anchor: (Width: 100, Height: 36);
+                Style: @CloseButtonStyle;
+            }
+        }
     }
-  }
 }
