@@ -62,7 +62,7 @@ public final class InteractionRedirector {
             );
             manager.queueExecuteChain(chain);
 
-            DebugChat.send(entityRef, store, "Abrindo " + rootId);
+            DebugChat.sendIfEnabled(entityRef, store, "Abrindo " + rootId);
         });
     }
 }

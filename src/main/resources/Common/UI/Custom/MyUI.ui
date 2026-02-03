@@ -35,87 +35,95 @@
 );
 
 Group {
-    Anchor: (Width: 800, Height: 550);
+    Anchor: (Width: 960, Height: 640);
     LayoutMode: Left;
 
     Group #LeftPanel {
-        Anchor: (Width: 220);
+        Anchor: (Width: 260);
         Background: #0f172a(0.97);
         LayoutMode: Top;
-        Padding: (Full: 24);
+        Padding: (Full: 28);
 
         Group #Header {
             LayoutMode: Top;
-            Anchor: (Height: 80);
+            Anchor: (Height: 92);
 
             Label {
                 Text: "BETTER INTERACTION";
-                Anchor: (Height: 28);
-                Style: (FontSize: 13, TextColor: #3b82f6, RenderUppercase: true, LetterSpacing: 2, RenderBold: true);
+                Anchor: (Height: 30);
+                Style: (FontSize: 14, TextColor: #3b82f6, RenderUppercase: true, LetterSpacing: 2, RenderBold: true);
             }
 
-            Group { Anchor: (Height: 8); }
+            Group { Anchor: (Height: 10); }
 
             Label {
                 Text: "Menu de Interação Avançado";
-                Anchor: (Height: 24);
-                Style: (FontSize: 12, TextColor: #64748b);
+                Anchor: (Height: 26);
+                Style: (FontSize: 13, TextColor: #64748b);
             }
         }
 
-        Group { Anchor: (Height: 16); }
+        Group { Anchor: (Height: 20); }
 
         Group {
             Anchor: (Height: 2);
             Background: #1e293b;
         }
 
-        Group { Anchor: (Height: 24); }
+        Group { Anchor: (Height: 28); }
 
         Label {
             Text: "NAVEGAÇÃO";
-            Anchor: (Height: 20);
-            Style: (FontSize: 10, TextColor: #475569, RenderUppercase: true, LetterSpacing: 1.5, RenderBold: true);
+            Anchor: (Height: 22);
+            Style: (FontSize: 11, TextColor: #475569, RenderUppercase: true, LetterSpacing: 1.5, RenderBold: true);
         }
 
-        Group { Anchor: (Height: 12); }
+        Group { Anchor: (Height: 14); }
 
-        TextButton #NavSettings {
+        TextButton #NavSettingsActive {
             Text: "  ⚙  Configurações";
-            Anchor: (Height: 42);
+            Anchor: (Height: 46);
             Style: @NavButtonActiveStyle;
+            Visible: true;
         }
 
-        Group { Anchor: (Height: 6); }
+        TextButton #NavSettingsInactive {
+            Text: "  ⚙  Configurações";
+            Anchor: (Height: 46);
+            Style: @NavButtonStyle;
+            Visible: false;
+        }
 
-        TextButton #NavInteractions {
+        Group { Anchor: (Height: 8); }
+
+        TextButton #NavInteractionsActive {
             Text: "  ◈  Interações";
-            Anchor: (Height: 42);
-            Style: @NavButtonStyle;
+            Anchor: (Height: 46);
+            Style: @NavButtonActiveStyle;
+            Visible: false;
         }
 
-        Group { Anchor: (Height: 6); }
-
-        TextButton #NavBlocks {
-            Text: "  ▣  Blocos";
-            Anchor: (Height: 42);
+        TextButton #NavInteractionsInactive {
+            Text: "  ◈  Interações";
+            Anchor: (Height: 46);
             Style: @NavButtonStyle;
+            Visible: true;
         }
 
-        Group { Anchor: (Height: 6); }
+        Group { Anchor: (Height: 8); }
 
-        TextButton #NavAdvanced {
-            Text: "  ◆  Avançado";
-            Anchor: (Height: 42);
-            Style: @NavButtonStyle;
-        }
-
-        Group { Anchor: (Height: 6); }
-
-        TextButton #NavAbout {
+        TextButton #NavAboutActive {
             Text: "  ℹ  Sobre";
-            Anchor: (Height: 42);
+            Anchor: (Height: 46);
+            Style: @NavButtonActiveStyle;
+            Visible: false;
+        }
+
+        TextButton #NavAboutInactive {
+            Text: "  ℹ  Sobre";
+            Anchor: (Height: 46);
             Style: @NavButtonStyle;
+            Visible: true;
         }
 
         Group { FlexWeight: 1; }
@@ -125,24 +133,24 @@ Group {
             Background: #1e293b;
         }
 
-        Group { Anchor: (Height: 16); }
+        Group { Anchor: (Height: 20); }
 
         Group #Footer {
             LayoutMode: Top;
-            Anchor: (Height: 60);
+            Anchor: (Height: 70);
 
             Label {
                 Text: "Versão 1.0.0";
-                Anchor: (Height: 20);
-                Style: (FontSize: 11, TextColor: #475569);
+                Anchor: (Height: 22);
+                Style: (FontSize: 12, TextColor: #475569);
             }
 
-            Group { Anchor: (Height: 4); }
+            Group { Anchor: (Height: 6); }
 
             Label {
                 Text: "Por ViniSebold";
-                Anchor: (Height: 20);
-                Style: (FontSize: 11, TextColor: #64748b);
+                Anchor: (Height: 22);
+                Style: (FontSize: 12, TextColor: #64748b);
             }
         }
     }
@@ -151,185 +159,325 @@ Group {
         FlexWeight: 1;
         Background: #1e293b(0.98);
         LayoutMode: Top;
-        Padding: (Full: 32);
+        Padding: (Full: 40);
 
-        Group #PageSettings {
-            LayoutMode: Top;
+        Group #PageContainer {
+            FlexWeight: 1;
+            LayoutMode: TopScrolling;
+            Padding: (Right: 8);
+            Overscroll: false;
+
+            Group #PageSettings {
+                LayoutMode: Top;
+                Visible: true;
 
             Group #HeaderSection {
                 LayoutMode: Top;
-                Anchor: (Height: 100);
+                Anchor: (Height: 112);
 
                 Label {
                     Text: "Configurações";
-                    Anchor: (Height: 40);
-                    Style: (FontSize: 26, TextColor: #f1f5f9, RenderBold: true);
+                    Anchor: (Height: 44);
+                    Style: (FontSize: 28, TextColor: #f1f5f9, RenderBold: true);
                 }
 
                 Label {
                     Text: "Personalize a experiência de interação do mod";
-                    Anchor: (Height: 24);
-                    Style: (FontSize: 14, TextColor: #94a3b8);
+                    Anchor: (Height: 26);
+                    Style: (FontSize: 15, TextColor: #94a3b8);
                 }
             }
 
-            Group { Anchor: (Height: 24); }
+            Group { Anchor: (Height: 28); }
 
             Group #SettingsCard1 {
                 LayoutMode: Top;
                 Background: #0f172a(0.6);
-                Padding: (Full: 20);
-                Anchor: (Height: 110);
+                Padding: (Full: 24);
+                Anchor: (Height: 130);
 
                 Label {
                     Text: "Interação com Blocos";
-                    Anchor: (Height: 28);
-                    Style: (FontSize: 16, TextColor: #f1f5f9, RenderBold: true);
+                    Anchor: (Height: 30);
+                    Style: (FontSize: 17, TextColor: #f1f5f9, RenderBold: true);
                 }
 
-                Group { Anchor: (Height: 8); }
+                Group { Anchor: (Height: 10); }
 
                 Label {
                     Text: "Habilitar sistema de interação personalizado para blocos do mundo";
-                    Anchor: (Height: 22);
-                    Style: (FontSize: 13, TextColor: #94a3b8);
+                    Anchor: (Height: 24);
+                    Style: (FontSize: 14, TextColor: #94a3b8);
                 }
 
-                Group { Anchor: (Height: 12); }
+                Group { Anchor: (Height: 14); }
 
                 Group {
                     LayoutMode: Left;
-                    Anchor: (Height: 38);
+                    Anchor: (Height: 42);
 
-                    TextButton #ToggleBlockInteraction {
+                    TextButton #ToggleBlockInteractionOn {
                         Text: "ATIVADO";
-                        Anchor: (Width: 120, Height: 38);
+                        Anchor: (Width: 130, Height: 42);
                         Style: @SuccessButtonStyle;
+                        Visible: true;
                     }
 
-                    Group { Anchor: (Width: 12); }
+                    TextButton #ToggleBlockInteractionOff {
+                        Text: "DESATIVADO";
+                        Anchor: (Width: 130, Height: 42);
+                        Style: @DangerButtonStyle;
+                        Visible: false;
+                    }
+
+                    Group { Anchor: (Width: 14); }
 
                     TextButton #ConfigureBlocks {
                         Text: "CONFIGURAR";
-                        Anchor: (Width: 140, Height: 38);
+                        Anchor: (Width: 150, Height: 42);
                         Style: @SecondaryButtonStyle;
                     }
                 }
             }
 
-            Group { Anchor: (Height: 16); }
+            Group { Anchor: (Height: 20); }
 
             Group #SettingsCard2 {
                 LayoutMode: Top;
                 Background: #0f172a(0.6);
-                Padding: (Full: 20);
-                Anchor: (Height: 110);
+                Padding: (Full: 24);
+                Anchor: (Height: 130);
 
                 Label {
                     Text: "Modo de Depuração";
-                    Anchor: (Height: 28);
-                    Style: (FontSize: 16, TextColor: #f1f5f9, RenderBold: true);
+                    Anchor: (Height: 30);
+                    Style: (FontSize: 17, TextColor: #f1f5f9, RenderBold: true);
                 }
 
-                Group { Anchor: (Height: 8); }
+                Group { Anchor: (Height: 10); }
 
                 Label {
                     Text: "Exibir informações detalhadas sobre interações no chat";
-                    Anchor: (Height: 22);
-                    Style: (FontSize: 13, TextColor: #94a3b8);
+                    Anchor: (Height: 24);
+                    Style: (FontSize: 14, TextColor: #94a3b8);
                 }
 
-                Group { Anchor: (Height: 12); }
+                Group { Anchor: (Height: 14); }
 
                 Group {
                     LayoutMode: Left;
-                    Anchor: (Height: 38);
+                    Anchor: (Height: 42);
 
-                    TextButton #ToggleDebug {
-                        Text: "DESATIVADO";
-                        Anchor: (Width: 120, Height: 38);
-                        Style: @DangerButtonStyle;
+                    TextButton #ToggleDebugOn {
+                        Text: "ATIVADO";
+                        Anchor: (Width: 130, Height: 42);
+                        Style: @SuccessButtonStyle;
+                        Visible: false;
                     }
 
-                    Group { Anchor: (Width: 12); }
+                    TextButton #ToggleDebugOff {
+                        Text: "DESATIVADO";
+                        Anchor: (Width: 130, Height: 42);
+                        Style: @DangerButtonStyle;
+                        Visible: true;
+                    }
+
+                    Group { Anchor: (Width: 14); }
 
                     Label {
                         Text: "Útil para desenvolvimento e testes";
-                        Anchor: (Width: 250, Height: 38);
-                        Style: (FontSize: 12, TextColor: #64748b, VerticalAlignment: Center);
+                        Anchor: (Width: 280, Height: 42);
+                        Style: (FontSize: 13, TextColor: #64748b, VerticalAlignment: Center);
                     }
                 }
             }
 
-            Group { Anchor: (Height: 16); }
+            Group { Anchor: (Height: 20); }
 
             Group #SettingsCard3 {
                 LayoutMode: Top;
                 Background: #0f172a(0.6);
-                Padding: (Full: 20);
-                Anchor: (Height: 110);
+                Padding: (Full: 24);
+                Anchor: (Height: 130);
 
                 Label {
                     Text: "Performance";
-                    Anchor: (Height: 28);
-                    Style: (FontSize: 16, TextColor: #f1f5f9, RenderBold: true);
+                    Anchor: (Height: 30);
+                    Style: (FontSize: 17, TextColor: #f1f5f9, RenderBold: true);
                 }
 
-                Group { Anchor: (Height: 8); }
+                Group { Anchor: (Height: 10); }
 
                 Label {
                     Text: "Otimizar desempenho reduzindo efeitos visuais";
-                    Anchor: (Height: 22);
-                    Style: (FontSize: 13, TextColor: #94a3b8);
+                    Anchor: (Height: 24);
+                    Style: (FontSize: 14, TextColor: #94a3b8);
                 }
 
-                Group { Anchor: (Height: 12); }
+                Group { Anchor: (Height: 14); }
 
                 Group {
                     LayoutMode: Left;
-                    Anchor: (Height: 38);
+                    Anchor: (Height: 42);
 
                     TextButton #PerformanceMode {
                         Text: "BALANCEADO";
-                        Anchor: (Width: 140, Height: 38);
+                        Anchor: (Width: 150, Height: 42);
                         Style: @PrimaryButtonStyle;
                     }
 
-                    Group { Anchor: (Width: 12); }
+                    Group { Anchor: (Width: 14); }
 
                     TextButton #ResetSettings {
                         Text: "RESETAR TUDO";
-                        Anchor: (Width: 150, Height: 38);
+                        Anchor: (Width: 170, Height: 42);
                         Style: @DangerButtonStyle;
                     }
                 }
             }
-        }
+            }
 
-        Group { FlexWeight: 1; }
+            Group #PageInteractions {
+                LayoutMode: Top;
+                Visible: false;
+
+                Group {
+                    LayoutMode: Top;
+                    Anchor: (Height: 112);
+
+                Label {
+                    Text: "Interações";
+                    Anchor: (Height: 44);
+                    Style: (FontSize: 28, TextColor: #f1f5f9, RenderBold: true);
+                }
+
+                Label {
+                    Text: "Atalhos rápidos e ações comuns do sistema";
+                    Anchor: (Height: 26);
+                    Style: (FontSize: 15, TextColor: #94a3b8);
+                }
+            }
+
+                Group { Anchor: (Height: 28); }
+
+                Group {
+                    LayoutMode: Top;
+                    Background: #0f172a(0.6);
+                    Padding: (Full: 24);
+                    Anchor: (Height: 130);
+
+                Label {
+                    Text: "Atalhos de Interação";
+                    Anchor: (Height: 30);
+                    Style: (FontSize: 17, TextColor: #f1f5f9, RenderBold: true);
+                }
+
+                Group { Anchor: (Height: 10); }
+
+                Label {
+                    Text: "Defina ações padrão para interações rápidas";
+                    Anchor: (Height: 24);
+                    Style: (FontSize: 14, TextColor: #94a3b8);
+                }
+
+                Group { Anchor: (Height: 14); }
+
+                Group {
+                    LayoutMode: Left;
+                    Anchor: (Height: 42);
+
+                    TextButton {
+                        Text: "EDITAR ATALHOS";
+                        Anchor: (Width: 180, Height: 42);
+                        Style: @SecondaryButtonStyle;
+                    }
+                }
+                }
+            }
+
+            Group #PageAbout {
+                LayoutMode: Top;
+                Visible: false;
+
+                Group {
+                    LayoutMode: Top;
+                    Anchor: (Height: 112);
+
+                Label {
+                    Text: "Sobre";
+                    Anchor: (Height: 44);
+                    Style: (FontSize: 28, TextColor: #f1f5f9, RenderBold: true);
+                }
+
+                Label {
+                    Text: "Informações do mod e links úteis";
+                    Anchor: (Height: 26);
+                    Style: (FontSize: 15, TextColor: #94a3b8);
+                }
+            }
+
+                Group { Anchor: (Height: 28); }
+
+                Group {
+                    LayoutMode: Top;
+                    Background: #0f172a(0.6);
+                    Padding: (Full: 24);
+                    Anchor: (Height: 130);
+
+                Label {
+                    Text: "Better Interaction";
+                    Anchor: (Height: 30);
+                    Style: (FontSize: 17, TextColor: #f1f5f9, RenderBold: true);
+                }
+
+                Group { Anchor: (Height: 10); }
+
+                Label {
+                    Text: "Versão 1.0.0 - Desenvolvido por ViniSebold";
+                    Anchor: (Height: 24);
+                    Style: (FontSize: 14, TextColor: #94a3b8);
+                }
+
+                Group { Anchor: (Height: 14); }
+
+                Group {
+                    LayoutMode: Left;
+                    Anchor: (Height: 42);
+
+                    TextButton {
+                        Text: "DOCUMENTAÇÃO";
+                        Anchor: (Width: 180, Height: 42);
+                        Style: @SecondaryButtonStyle;
+                    }
+                }
+                }
+            }
+
+            Group { Anchor: (Height: 16); }
+        }
 
         Group {
             Anchor: (Height: 2);
             Background: #334155;
         }
 
-        Group { Anchor: (Height: 20); }
+        Group { Anchor: (Height: 24); }
 
         Group #FooterButtons {
             LayoutMode: Right;
-            Anchor: (Height: 44);
+            Anchor: (Height: 50);
 
             TextButton #CloseButton {
                 Text: "FECHAR";
-                Anchor: (Width: 120, Height: 44);
+                Anchor: (Width: 130, Height: 48);
                 Style: @SecondaryButtonStyle;
             }
 
-            Group { Anchor: (Width: 12); }
+            Group { Anchor: (Width: 14); }
 
             TextButton #ApplyButton {
                 Text: "APLICAR";
-                Anchor: (Width: 120, Height: 44);
+                Anchor: (Width: 130, Height: 48);
                 Style: @PrimaryButtonStyle;
             }
         }

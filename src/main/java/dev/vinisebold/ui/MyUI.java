@@ -17,6 +17,10 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.vinisebold.util.DebugChat;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,9 +34,7 @@ import javax.annotation.Nonnull;
  */
 public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
 
-    private boolean blockInteractionEnabled = true;
-    private boolean debugMode = false;
-    private String performanceMode = "BALANCEADO";
+    private static final Map<UUID, UIState> STATE = new ConcurrentHashMap<>();
 
     /**
      * Event data for all UI interactions
@@ -59,6 +61,13 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
         }
     }
 
+    private static class UIState {
+        private boolean blockInteractionEnabled = true;
+        private boolean debugMode = false;
+        private String performanceMode = "BALANCEADO";
+        private String activePage = "Settings";
+    }
+
     public MyUI(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, UIEventData.CODEC);
     }
@@ -70,20 +79,25 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
             @Nonnull UIEventBuilder evt,
             @Nonnull Store<EntityStore> store
     ) {
+        UIState state = getState(ref, store);
+
         // Load the UI layout
         cmd.append("MyUI.ui");
 
         // Bind all navigation buttons
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavSettings", EventData.of("Button", "NavSettings"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavInteractions", EventData.of("Button", "NavInteractions"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavBlocks", EventData.of("Button", "NavBlocks"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavAdvanced", EventData.of("Button", "NavAdvanced"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavAbout", EventData.of("Button", "NavAbout"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavSettingsActive", EventData.of("Button", "NavSettings"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavSettingsInactive", EventData.of("Button", "NavSettings"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavInteractionsActive", EventData.of("Button", "NavInteractions"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavInteractionsInactive", EventData.of("Button", "NavInteractions"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavAboutActive", EventData.of("Button", "NavAbout"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#NavAboutInactive", EventData.of("Button", "NavAbout"), false);
 
         // Bind settings buttons
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#ToggleBlockInteraction", EventData.of("Button", "ToggleBlockInteraction"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#ToggleBlockInteractionOn", EventData.of("Button", "ToggleBlockInteraction"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#ToggleBlockInteractionOff", EventData.of("Button", "ToggleBlockInteraction"), false);
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#ConfigureBlocks", EventData.of("Button", "ConfigureBlocks"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#ToggleDebug", EventData.of("Button", "ToggleDebug"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#ToggleDebugOn", EventData.of("Button", "ToggleDebug"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#ToggleDebugOff", EventData.of("Button", "ToggleDebug"), false);
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#PerformanceMode", EventData.of("Button", "PerformanceMode"), false);
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#ResetSettings", EventData.of("Button", "ResetSettings"), false);
 
@@ -92,14 +106,46 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#ApplyButton", EventData.of("Button", "ApplyButton"), false);
 
         // Update button states based on current settings
-        updateButtonStates(cmd);
+        updateButtonStates(cmd, state);
+        DebugChat.setEnabled(ref, store, state.debugMode);
     }
 
-    private void updateButtonStates(UICommandBuilder cmd) {
+    private UIState getState(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
+        PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
+        if (playerRef == null) {
+            return new UIState();
+        }
+        return STATE.computeIfAbsent(playerRef.getUuid(), key -> new UIState());
+    }
+
+    private void updateButtonStates(UICommandBuilder cmd, UIState state) {
         // Update toggle button texts
-        cmd.set("#ToggleBlockInteraction.Text", blockInteractionEnabled ? "ATIVADO" : "DESATIVADO");
-        cmd.set("#ToggleDebug.Text", debugMode ? "ATIVADO" : "DESATIVADO");
-        cmd.set("#PerformanceMode.Text", performanceMode);
+        cmd.set("#ToggleBlockInteractionOn.Visible", state.blockInteractionEnabled);
+        cmd.set("#ToggleBlockInteractionOff.Visible", !state.blockInteractionEnabled);
+        cmd.set("#ToggleDebugOn.Visible", state.debugMode);
+        cmd.set("#ToggleDebugOff.Visible", !state.debugMode);
+        cmd.set("#PerformanceMode.Text", state.performanceMode);
+
+        // Update page visibility
+        cmd.set("#PageSettings.Visible", "Settings".equals(state.activePage));
+        cmd.set("#PageInteractions.Visible", "Interactions".equals(state.activePage));
+        cmd.set("#PageAbout.Visible", "About".equals(state.activePage));
+
+        // Update nav button visibility
+        cmd.set("#NavSettingsActive.Visible", "Settings".equals(state.activePage));
+        cmd.set("#NavSettingsInactive.Visible", !"Settings".equals(state.activePage));
+        cmd.set("#NavInteractionsActive.Visible", "Interactions".equals(state.activePage));
+        cmd.set("#NavInteractionsInactive.Visible", !"Interactions".equals(state.activePage));
+        cmd.set("#NavAboutActive.Visible", "About".equals(state.activePage));
+        cmd.set("#NavAboutInactive.Visible", !"About".equals(state.activePage));
+    }
+
+    private void refreshUI(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
+        UIState state = getState(ref, store);
+        UICommandBuilder commandBuilder = new UICommandBuilder();
+        UIEventBuilder eventBuilder = new UIEventBuilder();
+        updateButtonStates(commandBuilder, state);
+        this.sendUpdate(commandBuilder, eventBuilder, false);
     }
 
     @Override
@@ -108,7 +154,9 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
             @Nonnull Store<EntityStore> store,
             @Nonnull UIEventData data
     ) {
+        super.handleDataEvent(ref, store, data);
         Player player = store.getComponent(ref, Player.getComponentType());
+        UIState state = getState(ref, store);
         
             String buttonId = data.getButtonId();
         
@@ -118,36 +166,29 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
         
             switch (buttonId) {
             case "NavSettings":
+                state.activePage = "Settings";
                 DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Configurações");
-                // Future: Switch to settings page
+                refreshUI(ref, store);
                 break;
 
             case "NavInteractions":
+                state.activePage = "Interactions";
                 DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Interações");
-                // Future: Switch to interactions page
-                break;
-
-            case "NavBlocks":
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Blocos");
-                // Future: Switch to blocks page
-                break;
-
-            case "NavAdvanced":
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Avançado");
-                // Future: Switch to advanced page
+                refreshUI(ref, store);
                 break;
 
             case "NavAbout":
+                state.activePage = "About";
                 DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Sobre");
-                // Future: Switch to about page
+                refreshUI(ref, store);
                 break;
 
             case "ToggleBlockInteraction":
-                blockInteractionEnabled = !blockInteractionEnabled;
-                String statusBlock = blockInteractionEnabled ? "§aATIVADO" : "§cDESATIVADO";
+                state.blockInteractionEnabled = !state.blockInteractionEnabled;
+                String statusBlock = state.blockInteractionEnabled ? "§aATIVADO" : "§cDESATIVADO";
                 DebugChat.send(ref, store, "§b[Better Interaction] §7Interação com blocos: " + statusBlock);
                 // Rebuild UI to update button
-                    this.sendUpdate();
+                refreshUI(ref, store);
                 break;
 
             case "ConfigureBlocks":
@@ -156,36 +197,38 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
                 break;
 
             case "ToggleDebug":
-                debugMode = !debugMode;
-                String statusDebug = debugMode ? "§aATIVADO" : "§cDESATIVADO";
+                state.debugMode = !state.debugMode;
+                String statusDebug = state.debugMode ? "§aATIVADO" : "§cDESATIVADO";
                 DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de depuração: " + statusDebug);
+                DebugChat.setEnabled(ref, store, state.debugMode);
                 // Rebuild UI to update button
-                    this.sendUpdate();
+                refreshUI(ref, store);
                 break;
 
             case "PerformanceMode":
                 // Cycle through performance modes
-                if (performanceMode.equals("BALANCEADO")) {
-                    performanceMode = "ALTO";
+                if ("BALANCEADO".equals(state.performanceMode)) {
+                    state.performanceMode = "ALTO";
                     DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de performance: §aALTO");
-                } else if (performanceMode.equals("ALTO")) {
-                    performanceMode = "BAIXO";
+                } else if ("ALTO".equals(state.performanceMode)) {
+                    state.performanceMode = "BAIXO";
                     DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de performance: §cBAIXO");
                 } else {
-                    performanceMode = "BALANCEADO";
+                    state.performanceMode = "BALANCEADO";
                     DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de performance: §eBALANCEADO");
                 }
                 // Rebuild UI to update button
-                    this.sendUpdate();
+                refreshUI(ref, store);
                 break;
 
             case "ResetSettings":
-                blockInteractionEnabled = true;
-                debugMode = false;
-                performanceMode = "BALANCEADO";
+                state.blockInteractionEnabled = true;
+                state.debugMode = false;
+                state.performanceMode = "BALANCEADO";
                 DebugChat.send(ref, store, "§b[Better Interaction] §eConfigurações resetadas para o padrão!");
+                DebugChat.setEnabled(ref, store, state.debugMode);
                 // Rebuild UI to update all buttons
-                    this.sendUpdate();
+                refreshUI(ref, store);
                 break;
 
             case "ApplyButton":
