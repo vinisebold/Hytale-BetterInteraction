@@ -68,6 +68,11 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
         private String activePage = "Settings";
     }
 
+    public static boolean isBlockInteractionEnabled(@Nonnull PlayerRef playerRef) {
+        UIState state = STATE.get(playerRef.getUuid());
+        return state == null || state.blockInteractionEnabled;
+    }
+
     public MyUI(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, UIEventData.CODEC);
     }
@@ -103,7 +108,6 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
 
         // Bind footer buttons
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#CloseButton", EventData.of("Button", "CloseButton"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#ApplyButton", EventData.of("Button", "ApplyButton"), false);
 
         // Update button states based on current settings
         updateButtonStates(cmd, state);
@@ -167,40 +171,40 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
             switch (buttonId) {
             case "NavSettings":
                 state.activePage = "Settings";
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Configurações");
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Navegando para Configurações");
                 refreshUI(ref, store);
                 break;
 
             case "NavInteractions":
                 state.activePage = "Interactions";
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Interações");
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Navegando para Interações");
                 refreshUI(ref, store);
                 break;
 
             case "NavAbout":
                 state.activePage = "About";
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Navegando para Sobre");
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Navegando para Sobre");
                 refreshUI(ref, store);
                 break;
 
             case "ToggleBlockInteraction":
                 state.blockInteractionEnabled = !state.blockInteractionEnabled;
                 String statusBlock = state.blockInteractionEnabled ? "§aATIVADO" : "§cDESATIVADO";
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Interação com blocos: " + statusBlock);
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Interação com blocos: " + statusBlock);
                 // Rebuild UI to update button
                 refreshUI(ref, store);
                 break;
 
             case "ConfigureBlocks":
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Abrindo configuração de blocos...");
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Abrindo configuração de blocos...");
                 // Future: Open block configuration menu
                 break;
 
             case "ToggleDebug":
                 state.debugMode = !state.debugMode;
                 String statusDebug = state.debugMode ? "§aATIVADO" : "§cDESATIVADO";
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de depuração: " + statusDebug);
                 DebugChat.setEnabled(ref, store, state.debugMode);
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Modo de depuração: " + statusDebug);
                 // Rebuild UI to update button
                 refreshUI(ref, store);
                 break;
@@ -209,13 +213,13 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
                 // Cycle through performance modes
                 if ("BALANCEADO".equals(state.performanceMode)) {
                     state.performanceMode = "ALTO";
-                    DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de performance: §aALTO");
+                    DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Modo de performance: §aALTO");
                 } else if ("ALTO".equals(state.performanceMode)) {
                     state.performanceMode = "BAIXO";
-                    DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de performance: §cBAIXO");
+                    DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Modo de performance: §cBAIXO");
                 } else {
                     state.performanceMode = "BALANCEADO";
-                    DebugChat.send(ref, store, "§b[Better Interaction] §7Modo de performance: §eBALANCEADO");
+                    DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Modo de performance: §eBALANCEADO");
                 }
                 // Rebuild UI to update button
                 refreshUI(ref, store);
@@ -225,25 +229,20 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
                 state.blockInteractionEnabled = true;
                 state.debugMode = false;
                 state.performanceMode = "BALANCEADO";
-                DebugChat.send(ref, store, "§b[Better Interaction] §eConfigurações resetadas para o padrão!");
                 DebugChat.setEnabled(ref, store, state.debugMode);
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §eConfigurações resetadas para o padrão!");
                 // Rebuild UI to update all buttons
                 refreshUI(ref, store);
-                break;
-
-            case "ApplyButton":
-                DebugChat.send(ref, store, "§b[Better Interaction] §aConfigurações aplicadas com sucesso!");
-                // Future: Save settings to config file
                 break;
 
             case "CloseButton":
                 // Close the page
                 player.getPageManager().setPage(ref, store, Page.None);
-                DebugChat.send(ref, store, "§b[Better Interaction] §7Menu fechado");
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Menu fechado");
                 break;
 
             default:
-                    DebugChat.send(ref, store, "§b[Better Interaction] §cBotão desconhecido: " + buttonId);
+                DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §cBotão desconhecido: " + buttonId);
                 break;
         }
     }

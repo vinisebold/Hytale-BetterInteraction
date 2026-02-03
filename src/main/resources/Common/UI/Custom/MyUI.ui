@@ -193,8 +193,8 @@ Group {
             Group #SettingsCard1 {
                 LayoutMode: Top;
                 Background: #0f172a(0.6);
-                Padding: (Full: 24);
-                Anchor: (Height: 130);
+                Padding: (Full: 24, Bottom: 34);
+                Anchor: (Height: 165);
 
                 Label {
                     Text: "Interação com Blocos";
@@ -245,8 +245,8 @@ Group {
             Group #SettingsCard2 {
                 LayoutMode: Top;
                 Background: #0f172a(0.6);
-                Padding: (Full: 24);
-                Anchor: (Height: 130);
+                Padding: (Full: 24, Bottom: 34);
+                Anchor: (Height: 165);
 
                 Label {
                     Text: "Modo de Depuração";
@@ -297,8 +297,8 @@ Group {
             Group #SettingsCard3 {
                 LayoutMode: Top;
                 Background: #0f172a(0.6);
-                Padding: (Full: 24);
-                Anchor: (Height: 130);
+                Padding: (Full: 24, Bottom: 34);
+                Anchor: (Height: 165);
 
                 Label {
                     Text: "Performance";
@@ -363,8 +363,8 @@ Group {
                 Group {
                     LayoutMode: Top;
                     Background: #0f172a(0.6);
-                    Padding: (Full: 24);
-                    Anchor: (Height: 130);
+                    Padding: (Full: 24, Bottom: 34);
+                    Anchor: (Height: 165);
 
                 Label {
                     Text: "Atalhos de Interação";
@@ -421,8 +421,8 @@ Group {
                 Group {
                     LayoutMode: Top;
                     Background: #0f172a(0.6);
-                    Padding: (Full: 24);
-                    Anchor: (Height: 130);
+                    Padding: (Full: 24, Bottom: 34);
+                    Anchor: (Height: 165);
 
                 Label {
                     Text: "Better Interaction";
@@ -471,14 +471,6 @@ Group {
                 Text: "FECHAR";
                 Anchor: (Width: 130, Height: 48);
                 Style: @SecondaryButtonStyle;
-            }
-
-            Group { Anchor: (Width: 14); }
-
-            TextButton #ApplyButton {
-                Text: "APLICAR";
-                Anchor: (Width: 130, Height: 48);
-                Style: @PrimaryButtonStyle;
             }
         }
     }
