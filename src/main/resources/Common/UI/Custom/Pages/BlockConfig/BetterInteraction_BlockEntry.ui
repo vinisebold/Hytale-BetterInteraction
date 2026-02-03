@@ -1,0 +1,41 @@
+@SuccessButtonStyle = TextButtonStyle(
+    Default: (Background: #10b981, LabelStyle: (FontSize: 13, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #059669, LabelStyle: (FontSize: 13, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #047857, LabelStyle: (FontSize: 13, TextColor: #d1fae5, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+@DangerButtonStyle = TextButtonStyle(
+    Default: (Background: #dc2626, LabelStyle: (FontSize: 13, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #b91c1c, LabelStyle: (FontSize: 13, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #991b1b, LabelStyle: (FontSize: 13, TextColor: #fee2e2, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+Group {
+    Anchor: (Width: 155, Height: 180, Bottom: 12, Right: 12);
+    Padding: (Full: 14);
+    Background: #1e293b(0.6);
+    LayoutMode: Top;
+
+    ItemIcon #BlockIcon {
+        Anchor: (Width: 64, Height: 64, Bottom: 10);
+    }
+
+    Label #BlockName {
+        Anchor: (Height: 42, Bottom: 10);
+        Style: (FontSize: 13, TextColor: #f1f5f9, RenderBold: true, HorizontalAlignment: Center);
+    }
+
+    TextButton #ToggleOn {
+        Text: "ATIVO";
+        Anchor: (Height: 34);
+        Style: @SuccessButtonStyle;
+        Visible: false;
+    }
+
+    TextButton #ToggleOff {
+        Text: "INATIVO";
+        Anchor: (Height: 34);
+        Style: @DangerButtonStyle;
+        Visible: true;
+    }
+}

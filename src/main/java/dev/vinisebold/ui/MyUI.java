@@ -197,7 +197,10 @@ public class MyUI extends InteractiveCustomUIPage<MyUI.UIEventData> {
 
             case "ConfigureBlocks":
                 DebugChat.sendIfEnabled(ref, store, "§b[Better Interaction] §7Abrindo configuração de blocos...");
-                // Future: Open block configuration menu
+                PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
+                if (playerRef != null) {
+                    player.getPageManager().openCustomPage(ref, store, new BlockConfigUI(playerRef));
+                }
                 break;
 
             case "ToggleDebug":

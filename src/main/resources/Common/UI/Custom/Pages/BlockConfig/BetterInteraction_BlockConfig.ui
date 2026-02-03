@@ -1,0 +1,120 @@
+@PrimaryButtonStyle = TextButtonStyle(
+    Default: (Background: #3b82f6, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #2563eb, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1d4ed8, LabelStyle: (FontSize: 14, TextColor: #e0e7ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+@SecondaryButtonStyle = TextButtonStyle(
+    Default: (Background: #374151, LabelStyle: (FontSize: 14, TextColor: #d1d5db, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #4b5563, LabelStyle: (FontSize: 14, TextColor: #f3f4f6, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1f2937, LabelStyle: (FontSize: 14, TextColor: #d1d5db, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+@DangerButtonStyle = TextButtonStyle(
+    Default: (Background: #dc2626, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #b91c1c, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #991b1b, LabelStyle: (FontSize: 14, TextColor: #fee2e2, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+@SuccessButtonStyle = TextButtonStyle(
+    Default: (Background: #10b981, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #059669, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #047857, LabelStyle: (FontSize: 14, TextColor: #d1fae5, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+Group {
+    Anchor: (Width: 900, Height: 600);
+    LayoutMode: Top;
+    Background: #1e293b(0.98);
+    Padding: (Full: 32);
+
+    Group {
+        LayoutMode: Left;
+        Anchor: (Height: 40);
+
+        TextButton #BackButton {
+            Text: "< VOLTAR";
+            Anchor: (Width: 110, Height: 36);
+            Style: @SecondaryButtonStyle;
+        }
+
+        Group { Anchor: (Width: 16); }
+
+        Label {
+            Text: "Configuração de Blocos";
+            Anchor: (Height: 36);
+            Style: (FontSize: 22, TextColor: #f1f5f9, RenderBold: true, VerticalAlignment: Center);
+        }
+    }
+
+    Group { Anchor: (Height: 18); }
+
+    Group {
+        LayoutMode: Left;
+        Anchor: (Height: 40);
+
+        TextButton #ModeWhitelistActive {
+            Text: "WHITELIST";
+            Anchor: (Width: 140, Height: 38);
+            Style: @SuccessButtonStyle;
+            Visible: true;
+        }
+
+        TextButton #ModeWhitelistInactive {
+            Text: "WHITELIST";
+            Anchor: (Width: 140, Height: 38);
+            Style: @SecondaryButtonStyle;
+            Visible: false;
+        }
+
+        Group { Anchor: (Width: 12); }
+
+        TextButton #ModeBlacklistActive {
+            Text: "BLACKLIST";
+            Anchor: (Width: 140, Height: 38);
+            Style: @DangerButtonStyle;
+            Visible: false;
+        }
+
+        TextButton #ModeBlacklistInactive {
+            Text: "BLACKLIST";
+            Anchor: (Width: 140, Height: 38);
+            Style: @SecondaryButtonStyle;
+            Visible: true;
+        }
+    }
+
+    Group { Anchor: (Height: 18); }
+
+    Group {
+        LayoutMode: Left;
+        Anchor: (Height: 42);
+
+        TextField #SearchInput {
+            Anchor: (Width: 700, Height: 40);
+            PlaceholderText: "Buscar bloco (ex: hytale:stone)";
+            Style: (FontSize: 14, TextColor: #ffffff(0.9));
+        }
+    }
+
+    Group { Anchor: (Height: 20); }
+
+    Group #ListCard {
+        FlexWeight: 1;
+        LayoutMode: TopScrolling;
+        Padding: (Full: 20, Right: 10);
+        Background: #0f172a(0.6);
+        Overscroll: false;
+
+        Label #EmptyListLabel {
+            Text: "Lista vazia";
+            Anchor: (Height: 24);
+            Style: (FontSize: 14, TextColor: #94a3b8, HorizontalAlignment: Center);
+            Visible: true;
+        }
+
+        Group #BlockList {
+            LayoutMode: Top;
+        }
+    }
+}
