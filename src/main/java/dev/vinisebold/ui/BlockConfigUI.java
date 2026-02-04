@@ -46,6 +46,7 @@ public class BlockConfigUI extends InteractiveCustomUIPage<BlockConfigUI.BlockCo
         BlockConfigState state = getState(ref, store);
         cmd.append("Pages/BlockConfig/BetterInteraction_BlockConfig.ui");
 
+        // Register ALL event bindings HERE in build() - ONLY ONCE
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#BackButton", EventData.of("Button", "BackButton"), false);
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#ModeWhitelistActive", EventData.of("Button", "ModeWhitelist"), false);
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#ModeWhitelistInactive", EventData.of("Button", "ModeWhitelist"), false);
@@ -53,7 +54,7 @@ public class BlockConfigUI extends InteractiveCustomUIPage<BlockConfigUI.BlockCo
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#ModeBlacklistInactive", EventData.of("Button", "ModeBlacklist"), false);
         evt.addEventBinding(CustomUIEventBindingType.ValueChanged, "#SearchInput", EventData.of("@SearchQuery", "#SearchInput.Value"), false);
 
-        updateUI(cmd, evt, state);
+        updateUI(cmd, state);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class BlockConfigUI extends InteractiveCustomUIPage<BlockConfigUI.BlockCo
             switch (data.button) {
                 case "BackButton":
                     if (playerRef != null) {
-                        player.getPageManager().openCustomPage(ref, store, new MyUI(playerRef));
+                        player.getPageManager().openCustomPage(ref, store, new BetterInteractionManagerUI(playerRef));
                     }
                     return;
 
@@ -128,65 +129,62 @@ public class BlockConfigUI extends InteractiveCustomUIPage<BlockConfigUI.BlockCo
         return STATE.computeIfAbsent(playerRef.getUuid(), key -> new BlockConfigState());
     }
 
-    private void refreshUI(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
-        BlockConfigState state = getState(ref, store);
-        UICommandBuilder commandBuilder = new UICommandBuilder();
-        UIEventBuilder eventBuilder = new UIEventBuilder();
-        updateUI(commandBuilder, eventBuilder, state);
-        this.sendUpdate(commandBuilder, eventBuilder, false);
-    }
+     private void refreshUI(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
+         BlockConfigState state = getState(ref, store);
+         UICommandBuilder commandBuilder = new UICommandBuilder();
+         updateUI(commandBuilder, state);
+         // Send updates WITHOUT any event builder to prevent duplicate bindings
+         this.sendUpdate(commandBuilder, new UIEventBuilder(), false);
+     }
 
-    private void updateUI(UICommandBuilder cmd, UIEventBuilder evt, BlockConfigState state) {
-        cmd.set("#ModeWhitelistActive.Visible", state.mode == Mode.WHITELIST);
-        cmd.set("#ModeWhitelistInactive.Visible", state.mode != Mode.WHITELIST);
-        cmd.set("#ModeBlacklistActive.Visible", state.mode == Mode.BLACKLIST);
-        cmd.set("#ModeBlacklistInactive.Visible", state.mode != Mode.BLACKLIST);
-        cmd.set("#SearchInput.Value", state.searchQuery == null ? "" : state.searchQuery);
+     private void updateUI(UICommandBuilder cmd, BlockConfigState state) {
+         cmd.set("#ModeWhitelistActive.Visible", state.mode == Mode.WHITELIST);
+         cmd.set("#ModeWhitelistInactive.Visible", state.mode != Mode.WHITELIST);
+         cmd.set("#ModeBlacklistActive.Visible", state.mode == Mode.BLACKLIST);
+         cmd.set("#ModeBlacklistInactive.Visible", state.mode != Mode.BLACKLIST);
+         cmd.set("#SearchInput.Value", state.searchQuery == null ? "" : state.searchQuery);
 
-        List<String> enabled = state.mode == Mode.WHITELIST ? state.whitelist : state.blacklist;
-        List<String> results = getSearchResults(state.searchQuery, enabled);
+         List<String> enabled = state.mode == Mode.WHITELIST ? state.whitelist : state.blacklist;
+         List<String> results = getSearchResults(state.searchQuery, enabled);
 
-        cmd.clear("#BlockList");
-        cmd.set("#EmptyListLabel.Visible", results.isEmpty());
+         cmd.clear("#BlockList");
+         cmd.set("#EmptyListLabel.Visible", results.isEmpty());
 
-        int rowIndex = 0;
-        int cardsInCurrentRow = 0;
-        int itemIndex = 0;
+         int rowIndex = 0;
+         int cardsInCurrentRow = 0;
+         int itemIndex = 0;
 
-        for (String blockId : results) {
-            if (cardsInCurrentRow == 0) {
-                cmd.appendInline("#BlockList", "Group { LayoutMode: Left; Anchor: (Bottom: 0); }");
-            }
+         for (String blockId : results) {
+             if (cardsInCurrentRow == 0) {
+                 cmd.appendInline("#BlockList", "Group { LayoutMode: Left; Anchor: (Bottom: 0); }");
+             }
 
-            cmd.append("#BlockList[" + rowIndex + "]", "Pages/BlockConfig/BetterInteraction_BlockEntry.ui");
+             cmd.append("#BlockList[" + rowIndex + "]", "Pages/BlockConfig/BetterInteraction_BlockEntry.ui");
 
-            Item item = Main.ITEMS.get(blockId);
-            String displayName = blockId;
-            if (item != null) {
-                String translationKey = item.getTranslationKey();
-                displayName = I18nModule.get().getMessage(this.playerRef.getLanguage(), translationKey);
-                if (displayName == null) {
-                    displayName = blockId;
-                }
-            }
+             Item item = Main.ITEMS.get(blockId);
+             String displayName = blockId;
+             if (item != null) {
+                 String translationKey = item.getTranslationKey();
+                 displayName = I18nModule.get().getMessage(this.playerRef.getLanguage(), translationKey);
+                 if (displayName == null) {
+                     displayName = blockId;
+                 }
+             }
 
-            cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #BlockName.Text", displayName);
-            cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #BlockIcon.ItemId", blockId);
-            
-            boolean isEnabled = enabled.contains(blockId);
-            cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #ToggleOn.Visible", isEnabled);
-            cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #ToggleOff.Visible", !isEnabled);
-
-            evt.addEventBinding(CustomUIEventBindingType.Activating, "#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #ToggleOn", EventData.of("Toggle", blockId), false);
-            evt.addEventBinding(CustomUIEventBindingType.Activating, "#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #ToggleOff", EventData.of("Toggle", blockId), false);
-            
-            cardsInCurrentRow++;
-            if (cardsInCurrentRow >= 5) {
-                cardsInCurrentRow = 0;
-                rowIndex++;
-            }
-        }
-    }
+             cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #BlockName.Text", displayName);
+             cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #BlockIcon.ItemId", blockId);
+             
+             boolean isEnabled = enabled.contains(blockId);
+             cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #ToggleOn.Visible", isEnabled);
+             cmd.set("#BlockList[" + rowIndex + "][" + cardsInCurrentRow + "] #ToggleOff.Visible", !isEnabled);
+             
+             cardsInCurrentRow++;
+             if (cardsInCurrentRow >= 5) {
+                 cardsInCurrentRow = 0;
+                 rowIndex++;
+             }
+         }
+     }
 
     private List<String> getSearchResults(String queryRaw, List<String> enabled) {
         String query = queryRaw == null ? "" : queryRaw.trim().toLowerCase(Locale.ROOT);

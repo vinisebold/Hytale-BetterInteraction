@@ -11,7 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.vinisebold.ui.MyUI;
+import dev.vinisebold.ui.BetterInteractionManagerUI;
 import dev.vinisebold.util.DebugChat;
 
 
@@ -23,7 +23,7 @@ public final class InteractionRedirector {
     public static void redirect(PlayerRef playerRef, World world, BlockPosition pos, int originalChainId) {
         world.execute(() -> {
 
-            if (playerRef == null || !MyUI.isBlockInteractionEnabled(playerRef)) {
+            if (playerRef == null || !BetterInteractionManagerUI.isBlockInteractionEnabled(playerRef)) {
                 return;
             }
 

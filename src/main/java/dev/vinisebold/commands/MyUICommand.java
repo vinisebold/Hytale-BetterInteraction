@@ -8,18 +8,18 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.vinisebold.ui.MyUI;
+import dev.vinisebold.ui.BetterInteractionManagerUI;
 
 import javax.annotation.Nonnull;
 
 /**
- * Command to open the Tutorial Level 3 page.
- * Usage: /tutorial3
+ * Command to open the Better Interaction Manager UI.
+ * Usage: /tutorial3 or /betterinteraction
  */
 public class MyUICommand extends AbstractPlayerCommand {
 
     public MyUICommand() {
-        super("tutorial3", "Opens Tutorial Level 3 - Dynamic Values", false);
+        super("tutorial3", "Opens Better Interaction Manager", false);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class MyUICommand extends AbstractPlayerCommand {
     ) {
         Player player = store.getComponent(ref, Player.getComponentType());
 
-        // Build the sectioned UI page
-        MyUI page = new MyUI(playerRef);
+        // Build the Better Interaction Manager with tabs
+        BetterInteractionManagerUI page = new BetterInteractionManagerUI(playerRef);
 
         assert player != null;
         player.getPageManager().openCustomPage(ref, store, page);
